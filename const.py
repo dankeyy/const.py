@@ -1,6 +1,6 @@
 import ast
-import traceback
 import sys
+import traceback
 from types import TracebackType
 
 
@@ -11,24 +11,22 @@ while "importlib" in frame.f_code.co_filename:
     frame = frame.f_back
 
 
-class Poo(ast.NodeVisitor):
+class ConstHunter(ast.NodeVisitor):
     def __init__(self):
         self.seen = set()
         super().__init__()
 
     def visit_Assign(self, node):
-
         for ass in node.targets:
             ident = ass.id
 
             if ident.isupper():
-
                 if ident in self.seen:
                     try:
                         tb = TracebackType(tb_next=None,
-                                                    tb_frame=frame,
-                                                    tb_lasti=0, # rekt
-                                                    tb_lineno=node.lineno)
+                                           tb_frame=frame,
+                                           tb_lasti=0, # rekt
+                                           tb_lineno=node.lineno)
                         raise SyntaxError("get const'd lol").with_traceback(tb)
 
                     except:
@@ -42,6 +40,7 @@ class Poo(ast.NodeVisitor):
 
 with open(frame.f_code.co_filename) as code:
     tree = ast.parse(code.read())
-    visitor = Poo()
-    for b in tree.body:
-        visitor.visit(b)
+    visitor = ConstHunter()
+
+    for node in tree.body:
+        visitor.visit(node)
