@@ -17,4 +17,5 @@ Traceback (most recent call last):
 SyntaxError: get const'd lol
 ```
 for various excuses, no elaborate q&a this time\
+do note re-assignment can still be easily done via locals/globals/exec/eval\
 have a nice day
