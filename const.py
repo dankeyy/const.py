@@ -18,9 +18,8 @@ class ConstHunter(ast.NodeVisitor):
 
 
     def visit_Name(self, node):
-        ident = node.id
-        if ident.isupper():
-            if ident in self.seen:
+        if isinstance(node.ctx, ast.Store) and node.id.isupper():
+            if node.id in self.seen:
                 try:
                     tb = TracebackType(tb_next=None,
                                         tb_frame=frame,
@@ -33,7 +32,7 @@ class ConstHunter(ast.NodeVisitor):
                     sys.exit(1)
 
             else:
-                self.seen.add(ident)
+                self.seen.add(node.id)
 
 
 with open(frame.f_code.co_filename) as code:
